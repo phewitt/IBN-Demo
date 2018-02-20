@@ -1,4 +1,4 @@
-const exchanges = require("../services/exchangesService");
+const exchanges = require("../services/ExchangesService");
 
 module.exports = app => {
   app.get("/api/ask-prices", async (req, res) => {

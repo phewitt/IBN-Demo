@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 
-require("./routes/exchangePricingRoutes")(app);
+require("./routes/ExchangePricingRoutes")(app);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));

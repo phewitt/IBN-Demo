@@ -1,13 +1,20 @@
 import React, { Component } from "react";
 import "./Header.css";
-import logo from "./logo.svg";
+import { Navbar, NavbarBrand, Nav, NavItem, NavLink } from "reactstrap";
+
 class Header extends Component {
   render() {
     return (
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <h1 className="App-title">React Express Starter</h1>
-      </header>
+      <div>
+        <Navbar color="primary" dark expand="lg">
+          <NavbarBrand href="/">CryptoSearch</NavbarBrand>
+          <Nav className="ml-auto" navbar>
+            <NavItem>
+              <NavLink href="/">Graphs</NavLink>
+            </NavItem>
+          </Nav>
+        </Navbar>
+      </div>
     );
   }
 }
