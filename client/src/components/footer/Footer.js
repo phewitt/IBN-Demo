@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import "./Footer.css";
-import { Navbar, NavbarBrand, Nav, NavItem, NavLink } from "reactstrap";
 
 class Footer extends Component {
   render() {

@@ -31,7 +31,7 @@ class ExchangePriceTable extends Component {
 
   render() {
     return (
-      <div className="container mt-5 shadow">
+      <div className="container mt-5">
         <ReactTable
           data={this.state.coinInfo}
           noDataText="Loading..."
