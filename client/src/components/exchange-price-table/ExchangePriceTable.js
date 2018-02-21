@@ -1,41 +1,50 @@
 import React, { Component } from "react";
 import "./ExchangePriceTable.css";
 import ReactTable from "react-table";
+import { Button } from 'reactstrap';
 import "react-table/react-table.css";
 
 class ExchangePriceTable extends Component {
   constructor() {
     super();
     this.state = {
-      coinInfo: []
+      coinInfo: [],
+      filtered: []
     };
+    this.getCoinInfo = this.getCoinInfo.bind(this);
   }
 
   componentDidMount() {
+    this.getCoinInfo();
+  }
+
+  getCoinInfo() {
+    this.setState({coinInfo:[]});
     fetch("/api/ask-prices")
       .then(res => res.json())
       .then(coinInfo =>
         this.setState({ coinInfo }, () =>
-          console.log("coinInfo Fetched...", coinInfo)
+          console.log("coinInfo Fetched...", this.coinInfo)
         )
       );
   }
 
   render() {
     return (
-      <div className="container">
+      <div className="container mt-5 shadow">
         <ReactTable
           data={this.state.coinInfo}
+          noDataText="Loading..."
           columns={[
             {
-              Header: "Pricing Table",
+              Header: "Exchange Info",
               columns: [
                 {
                   Header: "Exchange",
                   accessor: "exchange"
                 },
                 {
-                  Header: "Name",
+                  Header: "Coin Name",
                   accessor: "name"
                 },
                 {
@@ -45,9 +54,19 @@ class ExchangePriceTable extends Component {
               ]
             }
           ]}
-          defaultPageSize={15}
-          className="-striped mx-auto justify-content-center"
+          defaultSorted={[
+            {
+              id: "price",
+              desc: false
+            }
+          ]}
+          filterable
+          defaultPageSize={10}
+          className="-striped"
+          filtered={this.state.filtered}
+          onFilteredChange={filtered => this.setState({ filtered })}
         />
+        <Button color="success" className="mb-2 w-100" size="lg"  onClick={this.getCoinInfo}>Refresh</Button>        
       </div>
     );
   }
