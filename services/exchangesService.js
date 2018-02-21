@@ -16,7 +16,7 @@ module.exports.getKrakenPrices = async () => {
         );
         prices.push({
           name: object.name,
-          price: response.data.result[object.pair].a[0],
+          price: +response.data.result[object.pair].a[0],
           exchange: "kraken"
         });
       } catch (err) {
@@ -43,7 +43,7 @@ module.exports.getPoloniexPrices = async () => {
     usdAssetPairs.forEach(object => {
       prices.push({
         name: object.name,
-        price: response.data[object.pair].lowestAsk,
+        price: +response.data[object.pair].lowestAsk,
         exchange: "poloniex"
       });
     });
@@ -69,7 +69,7 @@ module.exports.getCoinCapPrices = async () => {
         let response = await axios.get(`http://coincap.io/page/${object.pair}`);
         prices.push({
           name: object.name,
-          price: response.data.price.toString(),
+          price: response.data.price,
           exchange: "coincap"
         });
       } catch (err) {
