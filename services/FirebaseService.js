@@ -2,8 +2,12 @@ var admin = require("firebase-admin");
 var serviceAccount = require("../secretConfigs/firebase.json");
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://ibn-demo.firebaseio.com"
+  credential: admin.credential.cert({
+    projectId: 'ibn-demo',
+    clientEmail: 'firebase-adminsdk-85oni@ibn-demo.iam.gserviceaccount.com',
+    privateKey: process.env.NODE_ENV === "production"? process.env.FIRESTORE_PRIVATE_KEY : serviceAccount.private_key,
+  }),
+  databaseURL: 'https://ibn-demo.firebaseio.com'
 });
 
 let db = admin.firestore();
