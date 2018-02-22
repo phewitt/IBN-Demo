@@ -1,5 +1,22 @@
 const axios = require("axios");
 
+function getCurrentDateTime() {
+  const today = new Date();
+  let day = today.getDate();
+  let month = today.getMonth() + 1;
+  const year = today.getFullYear();
+  let hour = today.getHours();
+  let minute = today.getMinutes();
+  let second = today.getSeconds();
+  
+  if (day < 10) day = `0${day}`;
+  if (month < 10) month = `0${month}`;
+  if (hour < 10) hour = `0${hour}`;
+  if (minute < 10) minute = `0${minute}`;
+  if (second < 10) second = `0${second}`;
+
+  return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+}
 module.exports.getKrakenPrices = async () => {
   let usdAssetPairs = [
     { name: "bitcoin", pair: "XXBTZUSD" },
@@ -17,7 +34,8 @@ module.exports.getKrakenPrices = async () => {
         prices.push({
           name: object.name,
           price: +response.data.result[object.pair].a[0],
-          exchange: "kraken"
+          exchange: "kraken",
+          time: getCurrentDateTime()
         });
       } catch (err) {
         console.log(err);
@@ -44,7 +62,8 @@ module.exports.getPoloniexPrices = async () => {
       prices.push({
         name: object.name,
         price: +response.data[object.pair].lowestAsk,
-        exchange: "poloniex"
+        exchange: "poloniex",
+        date: getCurrentDateTime()
       });
     });
   } catch (err) {
@@ -70,7 +89,8 @@ module.exports.getCoinCapPrices = async () => {
         prices.push({
           name: object.name,
           price: response.data.price,
-          exchange: "coincap"
+          exchange: "coincap",
+          date: getCurrentDateTime()
         });
       } catch (err) {
         console.log(err);
