@@ -61,7 +61,7 @@ class ExchangePriceTable extends Component {
                   accessor: "name"
                 },
                 {
-                  Header: "Price",
+                  Header: "Price(USD)",
                   accessor: "price",
                   Cell: row => {
                     return (
