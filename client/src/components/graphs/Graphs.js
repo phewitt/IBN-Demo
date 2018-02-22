@@ -5,8 +5,7 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-  Jumbotron,
-  Button
+  
 } from "reactstrap";
 
 import C3Chart from "react-c3js";

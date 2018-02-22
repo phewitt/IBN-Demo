@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./ExchangePriceTable.css";
 import ReactTable from "react-table";
-import { Button } from 'reactstrap';
+import { Button } from "reactstrap";
 import "react-table/react-table.css";
 
 class ExchangePriceTable extends Component {
@@ -9,7 +9,8 @@ class ExchangePriceTable extends Component {
     super();
     this.state = {
       coinInfo: [],
-      filtered: []
+      filtered: [],
+      lowestPrices: []
     };
     this.getCoinInfo = this.getCoinInfo.bind(this);
   }
@@ -19,14 +20,26 @@ class ExchangePriceTable extends Component {
   }
 
   getCoinInfo() {
-    this.setState({coinInfo:[]});
+    this.setState({ coinInfo: [] });
     fetch("/api/ask-prices")
       .then(res => res.json())
-      .then(coinInfo =>
-        this.setState({ coinInfo }, () =>
-          console.log("coinInfo Fetched...", this.coinInfo)
-        )
-      );
+      .then(coinInfo => {
+        let coinTypes = [];
+        let lowestPrices = [];
+        coinInfo.forEach(element => {
+          coinTypes.push(element.name);
+        });
+        coinTypes = new Set(coinTypes);
+        coinTypes.forEach(coinType => {
+          let coinPrices = coinInfo.filter(obj => obj.name === coinType);
+          let minPrice = coinPrices.reduce(
+            (min, coin) => (coin.price < min ? coin.price : min),
+            coinPrices[0].price
+          );
+          lowestPrices.push(minPrice);
+        });
+        return this.setState({ coinInfo, lowestPrices });
+      });
   }
 
   render() {
@@ -35,7 +48,7 @@ class ExchangePriceTable extends Component {
         <h1 className="text-muted pb-1">Exchange Pricing</h1>
         <ReactTable
           data={this.state.coinInfo}
-          noDataText="Loading..."
+          noDataText="Searching Exchanges..."
           columns={[
             {
               columns: [
@@ -49,7 +62,24 @@ class ExchangePriceTable extends Component {
                 },
                 {
                   Header: "Price",
-                  accessor: "price"
+                  accessor: "price",
+                  Cell: row => {
+                    return (
+                      <span>
+                        <span
+                          style={{
+                            color: this.state.lowestPrices.includes(row.value)
+                              ? "#57d500"
+                              : "#ff2e00",
+                            transition: "all .3s ease"
+                          }}
+                        >
+                          &#x25cf;
+                        </span>{" "}
+                        {row.value}
+                      </span>
+                    );
+                  }
                 }
               ]
             }
@@ -66,7 +96,14 @@ class ExchangePriceTable extends Component {
           filtered={this.state.filtered}
           onFilteredChange={filtered => this.setState({ filtered })}
         />
-        <Button color="success" className="mb-2 w-100" size="lg"  onClick={this.getCoinInfo}>Refresh</Button>        
+        <Button
+          color="success"
+          className="mb-2 w-100"
+          size="lg"
+          onClick={this.getCoinInfo}
+        >
+          Refresh
+        </Button>
       </div>
     );
   }
