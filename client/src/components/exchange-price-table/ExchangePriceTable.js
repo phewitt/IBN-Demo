@@ -31,13 +31,13 @@ class ExchangePriceTable extends Component {
 
   render() {
     return (
-      <div className="container mt-5">
+      <div className="container text-center bg-light mt-5 p-2">
+        <h1 className="text-muted pb-1">Exchange Pricing</h1>
         <ReactTable
           data={this.state.coinInfo}
           noDataText="Loading..."
           columns={[
             {
-              Header: "Exchange Info",
               columns: [
                 {
                   Header: "Exchange",

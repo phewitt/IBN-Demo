@@ -10,8 +10,11 @@ class Header extends Component {
         <Navbar color="dark" dark expand="lg">
           <NavbarBrand href="/">CryptoSearch</NavbarBrand>
           <Nav className="ml-auto" navbar>
+          <NavItem>
+              <NavLink tag={Link} to="/">Pricing</NavLink>
+            </NavItem>
             <NavItem>
-              <NavLink tag={Link} to="/graphs">Graphs</NavLink>
+              <NavLink tag={Link} to="/graphs">History</NavLink>
             </NavItem>
           </Nav>
         </Navbar>
