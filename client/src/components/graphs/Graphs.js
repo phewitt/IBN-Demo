@@ -21,7 +21,6 @@ const axis = {
 
 const zoom = {
     enabled: true,
-    rescale: true,
     extent: [1, 100]
 }
 
