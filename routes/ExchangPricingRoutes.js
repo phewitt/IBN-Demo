@@ -22,3 +22,4 @@ module.exports = app => {
     res.send(history);
   });
 };
+
