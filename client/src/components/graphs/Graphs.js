@@ -25,25 +25,15 @@ class Graphs extends Component {
     this.toggle = this.toggle.bind(this);
     this.state = {
       dropdownOpen: false,
-      selectedCoin: "bitcoin",
+      selectedCoin: "No Coin Selected",
       data: {
         x: "x",
         columns: [
-          [
-            "x",
-            "2017-01-01 12:10:00",
-            "2017-01-02 05:00:00",
-            "2017-01-03 03:00:00",
-            "2017-01-04 03:00:00",
-            "2017-01-05 03:00:00",
-            "2017-01-06 03:00:00"
-          ],
-          ["data1", 30, 200, 100, 400, 150, 250],
-          ["data2", 130, 340, 200, 500, 250, 350]
+         
         ],
         xFormat: "%Y-%m-%d %H:%M:%S"
       }
-    };
+    }
   }
 
   toggle() {
@@ -52,25 +42,50 @@ class Graphs extends Component {
     });
   }
   select(e, coinType) {
-    this.setState({
-      selectedCoin: coinType,
-      data: {
-        x: "x",
-        columns: [
-          [
-            "x",
-            "2017-01-01 12:10:00",
-            "2017-01-02 05:00:00",
-            "2017-01-03 03:00:00",
-            "2017-01-04 03:00:00",
-            "2017-01-05 03:00:00",
-            "2017-01-06 03:00:00"
-          ],
-          ["data1", 30, 200, 150, 4000, 150, 250],
-          ["data2", 130, 340, 200, 500, 2530, 350]
-        ]
-      }
-    });
+    this.setState({ data: {} });
+    fetch(`/api/history/${coinType.toLowerCase()}`)
+      .then(res => res.json())
+      .then(coinHistory => {
+        
+        console.log(coinHistory);
+        let timeColumn = ["x"];
+        let krakenPrices = ["kraken"];
+        let poloniexPrices = ["poloniex"];
+        let coinCapPrices = ["coincap"];
+
+        for (let coinInfo of coinHistory){
+          if(!timeColumn.includes(coinInfo.datetime)) timeColumn.push(coinInfo.datetime);
+
+          switch(coinInfo.exchange){
+            case "kraken":
+              krakenPrices.push(coinInfo.price);
+              break;
+            case "poloniex":
+              poloniexPrices.push(coinInfo.price);
+              break;
+            case "coincap":
+              coinCapPrices.push(coinInfo.price);
+              break; 
+            default:
+              break;        
+          }
+        }
+
+        return this.setState({
+          selectedCoin: coinType,
+          dropdownOpen: false,
+          data: {
+            x: "x",
+            columns: [
+             timeColumn,
+              krakenPrices,
+              poloniexPrices,
+              coinCapPrices
+            ],
+            xFormat: "%Y-%m-%d %H:%M:%S"
+          }
+        });
+      });
   }
   render() {
     return (
@@ -103,11 +118,6 @@ class Graphs extends Component {
           <h3 className="text-center p-2 bg-secondary text-white">
             {this.state.selectedCoin}
           </h3>
-          <h1>Kraken</h1>
-          <C3Chart data={this.state.data} axis={axis} />
-          <h1>Poloniex</h1>
-          <C3Chart data={this.state.data} axis={axis} />
-          <h1>CoinCap</h1>
           <C3Chart data={this.state.data} axis={axis} />
         </div>
       </div>

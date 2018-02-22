@@ -8,7 +8,7 @@ function getCurrentDateTime() {
   let hour = today.getHours();
   let minute = today.getMinutes();
   let second = today.getSeconds();
-  
+
   if (day < 10) day = `0${day}`;
   if (month < 10) month = `0${month}`;
   if (hour < 10) hour = `0${hour}`;
@@ -32,10 +32,9 @@ module.exports.getKrakenPrices = async () => {
           `https://api.kraken.com/0/public/Ticker?pair=${object.pair}`
         );
         prices.push({
-          name: object.name,
+          name: object.name.toLowerCase(),
           price: +response.data.result[object.pair].a[0],
           exchange: "kraken",
-          time: getCurrentDateTime()
         });
       } catch (err) {
         console.log(err);
@@ -60,16 +59,14 @@ module.exports.getPoloniexPrices = async () => {
     );
     usdAssetPairs.forEach(object => {
       prices.push({
-        name: object.name,
+        name: object.name.toLowerCase(),
         price: +response.data[object.pair].lowestAsk,
         exchange: "poloniex",
-        date: getCurrentDateTime()
       });
     });
   } catch (err) {
     console.log(err);
   }
-
   return prices;
 };
 
@@ -87,10 +84,9 @@ module.exports.getCoinCapPrices = async () => {
       try {
         let response = await axios.get(`http://coincap.io/page/${object.pair}`);
         prices.push({
-          name: object.name,
+          name: object.name.toLowerCase(),
           price: response.data.price,
           exchange: "coincap",
-          date: getCurrentDateTime()
         });
       } catch (err) {
         console.log(err);
