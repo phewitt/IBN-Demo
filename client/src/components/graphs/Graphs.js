@@ -19,6 +19,12 @@ const axis = {
   }
 };
 
+const zoom = {
+    enabled: true,
+    rescale: true,
+    extent: [1, 100]
+}
+
 class Graphs extends Component {
   constructor() {
     super();
@@ -118,7 +124,7 @@ class Graphs extends Component {
           <h3 className="text-center p-2 bg-secondary text-white">
             {this.state.selectedCoin}
           </h3>
-          <C3Chart data={this.state.data} axis={axis} />
+          <C3Chart data={this.state.data} axis={axis} zoom={zoom} />
         </div>
       </div>
     );
